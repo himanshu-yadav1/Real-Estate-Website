@@ -8,16 +8,31 @@ const signUp = async(req, res, next) => {
         const {username, email, password} = req.body
 
         if(!username || !email || !password){
-            return next(errorHandler(400, "all details are required for signUp"))
+            return next(errorHandler(400, "Fill all the details for Creating account"))
         }
 
-        const userAlreadyPresent = await User.findOne({
-            $or: [{username}, {email}]
-        })
+        // const userAlreadyPresent = await User.findOne({
+        //     $or: [{username}, {email}]
+        // })
+        // if(userAlreadyPresent){
+        //     return next(errorHandler(400, "user already present with this email or username"))
+        // }
 
-        if(userAlreadyPresent){
-            return next(errorHandler(400, "user already present with this email or username"))
+        const usernameAlreadyUsed = await User.findOne({username})
+        const emailAlreadyUsed = await User.findOne({email})
+
+        
+        if(usernameAlreadyUsed && emailAlreadyUsed){
+            return next(errorHandler(400, "Account already exists with this email and username"))
         }
+        else if(usernameAlreadyUsed){
+            return next(errorHandler(400, "Account already exists with this username"))
+        }
+        else if(emailAlreadyUsed){
+            return next(errorHandler(400, "Account already exists with this email"))
+        }
+        
+
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -27,7 +42,7 @@ const signUp = async(req, res, next) => {
             return next(errorHandler(500, "Error while creating user"))
         }
 
-        res.status(200).json({user, message: "User Registered successfully"})
+        res.status(200).json({user, statusCode: 200,  message: "User Registered Successfully"})
 
     } catch (error) {
         return next(error)
