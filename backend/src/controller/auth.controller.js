@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import errorHandler from "../utils/ErrorHandler.js"
+import jwt from 'jsonwebtoken'
 
 const signUp = async(req, res, next) => {
     try {
@@ -49,6 +50,38 @@ const signUp = async(req, res, next) => {
     }
 }
 
+const signIn = async(req, res, next) => {
+    try {
+        
+        const {email, password} = req.body
+
+        const user = await User.findOne({email})
+
+        if(!user){
+            return next(errorHandler(404, "Couldn't found your Account"))
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+
+        if(!isPasswordCorrect){
+            return next(errorHandler(401, "Wrong credentials"))
+        }
+
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+
+        const loggedInUser = await User.findById(user._id).select("-password")
+
+        return res
+        .status(200)
+        .cookie('access_token', token, { httpOnly: true})
+        .json({loggedInUser, statusCode: 200, message: "Login Successfull"})
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 export {
-    signUp
+    signUp,
+    signIn
 }

@@ -96,7 +96,7 @@ function SignUp() {
 
         {
           response.message && 
-              <p style={{color: response.status > 299 ? '#803129' : '#298049' }}>
+              <p style={{color: response.status > 299 ? '#b62b1c' : '#008f35' }}>
                 {response.message}                
               </p>
         }
