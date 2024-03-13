@@ -37,6 +37,9 @@ function OAuth() {
                 dispatch(signInSuccess(data))
                 navigate('/')
             })
+            .catch((fetchError) => {
+                console.log("Error while fetching data:", fetchError);
+            });
     
     
         } catch (error) {
