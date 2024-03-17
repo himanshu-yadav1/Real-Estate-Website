@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { test } from "../controller/user.controller.js";
+import { updateUser } from "../controller/user.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-router.get('/', test)
+router.post('/update/:id', verifyJWT, updateUser)
 
 export default router

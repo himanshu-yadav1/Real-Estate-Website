@@ -18,7 +18,7 @@ const userSchema = new Schema(
         },
         avatar: {
             type: String,
-            default: "https://t3.ftcdn.net/jpg/05/60/26/08/360_F_560260880_O1V3Qm2cNO5HWjN66mBh2NrlPHNHOUxW.jpg"
+            default: "https://i.pinimg.com/originals/71/f3/51/71f3519243d136361d81df71724c60a0.png"
         }
     },
     { timestamps: true }

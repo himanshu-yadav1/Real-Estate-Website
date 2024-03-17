@@ -55,26 +55,26 @@ const signIn = async(req, res, next) => {
         
         const {email, password} = req.body
 
-        const user = await User.findOne({email})
+        const userFound = await User.findOne({email})
 
-        if(!user){
+        if(!userFound){
             return next(errorHandler(404, "Couldn't found your Account"))
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        const isPasswordCorrect = await bcrypt.compare(password, userFound.password)
 
         if(!isPasswordCorrect){
             return next(errorHandler(401, "Wrong credentials"))
         }
 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+        const token = jwt.sign({id: userFound._id}, process.env.JWT_SECRET)
 
-        const loggedInUser = await User.findById(user._id).select("-password")
+        const user = await User.findById(userFound._id).select("-password")
 
         return res
         .status(200)
         .cookie('access_token', token, { httpOnly: true})
-        .json({loggedInUser, statusCode: 200, message: "Login Successfull"})
+        .json({user, statusCode: 200, message: "Login Successfull"})
 
     } catch (error) {
         next(error)
