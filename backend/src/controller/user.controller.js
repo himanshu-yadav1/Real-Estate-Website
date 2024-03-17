@@ -12,19 +12,38 @@ const updateUser = async(req, res, next) => {
 
         const {updatedUsername, updatedEmail, updatedPassword, updatedProfileUrl} = req.body
 
-        let hashedPassword;
-        if(updatedPassword){
-            hashedPassword = await bcrypt.hash(updatedPassword, 10)
+
+        let updateFields = {};
+
+        //username should be present && shouldn't be empty && shouldn't be just a space
+        if (updatedUsername && updatedUsername !== '' && updatedUsername != ' ') {
+            const isUsernameUsed = await User.findOne({username: updatedUsername})
+            if(isUsernameUsed){
+                return next(errorHandler(400, "Username alredy used"))
+            }
+
+            updateFields.username = updatedUsername;
+        }
+        if (updatedEmail && updatedEmail !== '' && updatedEmail !== ' ') {
+            const isEmailUsed = await User.findOne({email: updatedEmail})
+            if(isEmailUsed){
+                return next(errorHandler(400, "Email alredy used"))
+            }
+
+            updateFields.email = updatedEmail;
+        }
+        if (updatedPassword && updatedPassword !== '' && updatedPassword !== ' ') {
+            const hashedPassword = await bcrypt.hash(updatedPassword, 10);
+            updateFields.password = hashedPassword;
+        }
+        if (updatedProfileUrl && updatedProfileUrl !== '' && updatedProfileUrl !== ' ') {
+            updateFields.avatar = updatedProfileUrl;
         }
     
     
         const updatedUser = await User.findByIdAndUpdate(userId, {
-            $set:{
-                username: updatedUsername,
-                email: updatedEmail,
-                password: hashedPassword,
-                avatar: updatedProfileUrl
-            }
+            $set:{ ...updateFields }
+
         }, {new: true})
 
 

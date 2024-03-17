@@ -2,23 +2,35 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../config/firebase'
-import { signInSuccess } from '../app/userSlice'
+import { updateUserFailure, updateUserSuccess } from '../app/userSlice'
 
 function Profile() {
   const { currentUser } = useSelector(state => state.user)
+  const { error } = useSelector(state => state.user)
   const dispatch = useDispatch()
   const userSince = currentUser.user.createdAt.slice(0, 10)
 
   const [updateConsoleVisibility, setUpdateConsoleVisiblity] = useState(false)
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(
+    {                             //insted of initialising with empty object initialised with all properties with value empty string
+      updatedUsername: '',
+      updatedEmail: '',
+      updatedPassword: '',
+      updatedProfileUrl: ''
+    }
+  );
   const [profilePhoto, setProfilePhoto] = useState(undefined)
   const [fileUploadError, setFileUploadError] = useState(false)
   const [fileUploadMsg, setFileUploadMsg] = useState('')
 
-  console.log(formData)
+  useEffect(() => {
+    dispatch(updateUserFailure(null));
+  }, []);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    dispatch(updateUserFailure(null))
   };
 
   const handleEditProfile = () => {
@@ -39,14 +51,27 @@ function Profile() {
       return res.json()
     })
     .then((data) => {
-      dispatch(signInSuccess(data))
-      setFormData({})
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+
+      dispatch(updateUserSuccess(data))
+
+      setFormData(
+        {
+          updatedUsername: '',
+          updatedEmail: '',
+          updatedPassword: '',
+          updatedProfileUrl: ''
+        }
+      )
       setProfilePhoto(undefined)
       setUpdateConsoleVisiblity(false)
     })
     .catch((error) => {
       alert("oops! something went wrong could not update your profile")
-      console.log("error while updating profile ", error)
+      dispatch(updateUserFailure(error.message));
     })
   }
 
@@ -81,10 +106,6 @@ function Profile() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setFileUploadMsg('')
           setFormData({ ...formData, updatedProfileUrl: downloadURL })
-          return downloadURL
-        })
-        .then((downloadURL) => {
-          console.log("this is url: ", downloadURL)
         })
       },
 
@@ -116,7 +137,14 @@ function Profile() {
                 {
                   fileUploadError && 
                     (
-                      <span className='text-red-600'>Please upload only image file and of size less than 2MB</span>
+                      <span className='text-red-600'>Please upload only image file and of size less than 2MB. Otherwise, it will not be updated</span>
+                    )
+                }
+
+                {
+                  error && //error from redux store
+                    (
+                      <span className='text-red-600'>{error}</span>
                     )
                 }
                 <input className='border mt-2 bg-slate-100 rounded-lg focus:outline-none p-2' type="text" placeholder='New Username' id="updatedUsername"  value={formData.updatedUsername} onChange={handleChange}/>
