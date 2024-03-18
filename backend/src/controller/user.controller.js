@@ -19,7 +19,7 @@ const updateUser = async(req, res, next) => {
         if (updatedUsername && updatedUsername !== '' && updatedUsername != ' ') {
             const isUsernameUsed = await User.findOne({username: updatedUsername})
             if(isUsernameUsed){
-                return next(errorHandler(400, "Username alredy used"))
+                return next(errorHandler(400, "Username already used"))
             }
 
             updateFields.username = updatedUsername;
@@ -27,7 +27,7 @@ const updateUser = async(req, res, next) => {
         if (updatedEmail && updatedEmail !== '' && updatedEmail !== ' ') {
             const isEmailUsed = await User.findOne({email: updatedEmail})
             if(isEmailUsed){
-                return next(errorHandler(400, "Email alredy used"))
+                return next(errorHandler(400, "Email already used"))
             }
 
             updateFields.email = updatedEmail;

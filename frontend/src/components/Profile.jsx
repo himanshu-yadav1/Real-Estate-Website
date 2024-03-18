@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../config/firebase'
 import { updateUserFailure, updateUserSuccess } from '../app/userSlice'
+import './profile.css'
 
 function Profile() {
   const { currentUser } = useSelector(state => state.user)
@@ -22,6 +23,13 @@ function Profile() {
   const [profilePhoto, setProfilePhoto] = useState(undefined)
   const [fileUploadError, setFileUploadError] = useState(false)
   const [fileUploadMsg, setFileUploadMsg] = useState('')
+  const [updateProfileButton, setUpdateProfileButton] = useState(
+    {
+      isDisabled: false,
+      text: 'Update Profile'
+    }
+  );
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     dispatch(updateUserFailure(null));
@@ -75,8 +83,21 @@ function Profile() {
     })
   }
 
-  const closeEditProfile = () => {
+  const closeEditProfileConsole = () => {
     setUpdateConsoleVisiblity(false)
+
+    //clear selected file, errors, formData when edit-profile-console is closed
+    fileInputRef.current.value = '';
+    setFileUploadError(false)
+    dispatch(updateUserFailure(null))
+    setFormData(
+      {
+        updatedUsername: '',
+        updatedEmail: '',
+        updatedPassword: '',
+        updatedProfileUrl: ''
+      }
+    )
   }
 
 
@@ -97,15 +118,33 @@ function Profile() {
       (snapshot) => {
         const progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
         setFileUploadMsg(`Uplaoding Profile Photo (${progress}%) ...`)
+
+        setUpdateProfileButton({
+          isDisabled: true,
+          text: 'Uploading Profile Photo...'
+        })
+
       },
       (error) => {
         setFileUploadMsg('')
         setFileUploadError(true)
+
+        setUpdateProfileButton({
+          isDisabled: false,
+          text: 'Update Profile'
+        })
+
       }, 
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setFileUploadMsg('')
           setFormData({ ...formData, updatedProfileUrl: downloadURL })
+
+          setUpdateProfileButton({
+            isDisabled: false,
+            text: 'Update Profile'
+          })
+          
         })
       },
 
@@ -115,46 +154,46 @@ function Profile() {
 
   return (
     <>
-        <div style={{ display: updateConsoleVisibility ? 'block' : 'none' }} className='z-50 absolute bg-[white] bg-opacity-80 h-[100%] w-[100%]'>
-            <div className='flex flex-col items-center mx-auto mt-7 p-4 bg-[#BCD8C1] w-[80vw] md:w-[45vw] lg:w-[28vw] shadow-2xl rounded-md'>
-              
-              <div className="flex justify-end w-[100%]">
-                  <h1 className='text-2xl w-[90%] pl-16 font-semibold text-[#222E50]'>Edit Profile</h1>
-                  <p onClick={closeEditProfile} className='relative text-2xl cursor-pointer text-gray-700 hover:text-gray-500'>X</p>
-              </div>
+      <div style={{ display: updateConsoleVisibility ? 'block' : 'none' }} className='z-50 absolute bg-[white] bg-opacity-80 sm:bg-opacity-70 h-[100%] w-[100%]'>
+        <div className='flex flex-col items-center mx-auto sm:mr-10 mt-7 p-4 bg-slate-200 w-[80vw] md:w-[45vw] lg:w-[28vw] shadow-2xl rounded-md animation-slide-right'>
+            
+          <div className="flex justify-end w-[100%]">
+            <h1 className='text-2xl w-[90%] pl-16 font-semibold text-[#222E50]'>Edit Profile</h1>
+            <p onClick={closeEditProfileConsole} className='relative text-2xl cursor-pointer text-gray-700 hover:text-gray-500'>X</p>
+          </div>
 
-              <form onSubmit={handleUpdateProfile} className='flex flex-col mt-5 w-[100%]'>
-                <span className='px-2 text-sm text-[#63666b] text-justify'>Enter details you want to update, leave blank others</span>
-                <span className='mt-3 ml-1 text-gray-700'>New Profile photo</span>
-                <input onChange={e => setProfilePhoto(e.target.files[0])} type="file" accept="image/*" />
-                {
-                  fileUploadMsg &&
-                    (
-                      <span className='text-blue-950 opacity-70'>{fileUploadMsg}</span>
-                    )
-                }                
+          <form onSubmit={handleUpdateProfile} className='flex flex-col mt-5 w-[100%]'>
+            <span className='px-2 text-sm text-[#63666b] text-justify'>Enter details you want to update, leave blank others</span>
+            <span className='mt-3 ml-1 text-gray-700'>New Profile photo</span>
+            <input onChange={e => setProfilePhoto(e.target.files[0])} type="file" ref={fileInputRef} accept="image/*" />
+            {
+              fileUploadMsg &&
+                (
+                  <span className='text-blue-950 opacity-70'>{fileUploadMsg}</span>
+                )
+            }                
 
-                {
-                  fileUploadError && 
-                    (
-                      <span className='text-red-600'>Please upload only image file and of size less than 2MB. Otherwise, it will not be updated</span>
-                    )
-                }
+            {
+              fileUploadError && 
+                (
+                  <span className='text-red-600 opacity-60'>For updating profile ensure to upload only image file and of size less than 2MB.</span>
+                )
+            }
 
-                {
-                  error && //error from redux store
-                    (
-                      <span className='text-red-600'>{error}</span>
-                    )
-                }
-                <input className='border mt-2 bg-slate-100 rounded-lg focus:outline-none p-2' type="text" placeholder='New Username' id="updatedUsername"  value={formData.updatedUsername} onChange={handleChange}/>
-                <input className='border mt-2 bg-slate-100 rounded-lg focus:outline-none p-2' type="email" placeholder='New Email' id="updatedEmail"  value={formData.updatedEmail} onChange={handleChange}/>
-                <input className='border mt-2 bg-slate-100 rounded-lg focus:outline-none p-2' type="password" placeholder='New Password' id="updatedPassword"  value={formData.updatedPassword} onChange={handleChange}/>
-                <button type="submit" className='text-stone-100 text-lg mt-4 bg-[#007991] hover:opacity-85 p-2 rounded-full disabled:opacity-50'>Update Profile</button>
-              </form>
+            {
+              error && //error from redux store
+                (
+                  <span className='text-red-600 mt-2'>{error}</span>
+                )
+            }
+            <input className='border mt-2 bg-white rounded-lg focus:outline-none p-2' type="text" placeholder='New Username' id="updatedUsername"  value={formData.updatedUsername} onChange={handleChange}/>
+            <input className='border mt-2 bg-white rounded-lg focus:outline-none p-2' type="email" placeholder='New Email' id="updatedEmail"  value={formData.updatedEmail} onChange={handleChange}/>
+            <input className='border mt-2 bg-white rounded-lg focus:outline-none p-2' type="password" placeholder='New Password' id="updatedPassword"  value={formData.updatedPassword} onChange={handleChange}/>
+            <button type="submit" disabled={updateProfileButton.isDisabled} className='text-stone-100 text-lg mt-4 bg-[#007991] hover:opacity-85 p-2 rounded-full disabled:opacity-50 disabled:bg-[#5c5e5e]'>{updateProfileButton.text}</button>
+          </form>
 
-            </div>
         </div>
+      </div>
 
 
 
