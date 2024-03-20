@@ -125,8 +125,21 @@ const googleAuth = async(req, res, next) => {
     }
 }
 
+const signOut = async(req, res, next) => {
+    try {
+        res
+        .status(200)
+        .clearCookie('access_token')
+        .json({statusCode: 200, message: 'sign out successfully'}) 
+        
+    } catch (error) {
+        next(error)
+    }
+}
+
 export {
     signUp,
     signIn,
-    googleAuth
+    googleAuth,
+    signOut
 }

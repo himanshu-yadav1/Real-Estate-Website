@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../config/firebase'
-import { updateUserFailure, updateUserSuccess } from '../app/userSlice'
+import { deleteUserFailure, deleteUserSuccess, updateUserFailure, updateUserSuccess } from '../app/userSlice'
 import './profile.css'
 
 function Profile() {
@@ -32,8 +32,14 @@ function Profile() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    dispatch(updateUserFailure(null));
+    dispatch(updateUserFailure(null)); 
   }, []);
+
+  useEffect(() => {
+    if(profilePhoto){
+      uploadProfilePhoto(profilePhoto)
+    }
+  }, [profilePhoto])
 
 
   const handleChange = (e) => {
@@ -100,13 +106,6 @@ function Profile() {
     )
   }
 
-
-  useEffect(() => {
-    if(profilePhoto){
-      uploadProfilePhoto(profilePhoto)
-    }
-  }, [profilePhoto])
-
   const uploadProfilePhoto = () => {
     setFileUploadError(false)        //error set to false(if there is any previous error it will set to false while selecting new another file)
     const storage = getStorage(app)
@@ -149,6 +148,55 @@ function Profile() {
       },
 
     )
+  }
+
+  const handleDeleteAccount = () => {
+    var answer = window.confirm("Delete your account?");
+
+    if (answer) {
+
+      const userId = currentUser.user._id
+
+      fetch(`/api/v1/user/delete/${userId}`, {
+        method: "DELETE"
+      })
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        if(data.success == false){
+          dispatch(deleteUserFailure(data.message))
+          return
+        }
+        
+        dispatch(deleteUserSuccess())
+      })
+      .catch((error) => {
+        dispatch(deleteUserFailure(error.message))
+      })
+    }
+    else {
+      return
+    }
+    
+  }
+
+  const handleSignOut = () => {
+    fetch('/api/v1/auth/signout')
+    .then((resp) => {
+      return resp.json()
+    })
+    .then((data) => {
+      if(data.success == false){
+        dispatch(deleteUserFailure(data.message))
+        return
+      }
+      
+      dispatch(deleteUserSuccess())
+    })
+    .catch((error) => {
+      dispatch(deleteUserFailure(error.message))
+    })
   }
 
 
@@ -224,8 +272,8 @@ function Profile() {
 
         <div className='flex gap-5 sm:gap-10 p-2 sm:p-8 mt-5 sm:mt-0 mx-auto font-mono'>
           <div className='flex flex-col gap-1 text-lg items-center '>
-            <p className='text-red-700 cursor-pointer hover:text-red-500'>Sign Out</p>
-            <p className='text-red-700 cursor-pointer hover:text-red-500'>Delete Account</p>
+            <p onClick={handleSignOut} className='text-red-700 cursor-pointer hover:text-red-500'>Sign Out</p>
+            <p onClick={handleDeleteAccount} className='text-red-700 cursor-pointer hover:text-red-500'>Delete Account</p>
           </div>      
 
           <div className=''>
