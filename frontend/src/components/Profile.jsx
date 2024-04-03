@@ -4,6 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../config/firebase'
 import { deleteUserFailure, deleteUserSuccess, updateUserFailure, updateUserSuccess } from '../app/userSlice'
 import './profile.css'
+import { Link } from 'react-router-dom'
 
 function Profile() {
   const { currentUser } = useSelector(state => state.user)
@@ -266,8 +267,8 @@ function Profile() {
         </div>
 
         <div className='mt-10 sm:mt-8 flex flex-col mx-auto sm:flex-row gap-3'>
-          <button onClick={handleEditProfile} className='bg-[#439A86] p-3 sm:p-2 rounded-lg text-lg w-40 text-white hover:bg-white hover:border hover:border-[#439A86] hover:text-[#222E50] ease-in-out duration-200'>Edit Profile</button>
-          <button className='bg-transparent p-3 sm:p-2 rounded-lg text-lg text-[#222E50] w-40 border border-[#439A86] hover:bg-[#439A86] hover:text-white ease-in-out duration-200'>Create Listing</button>
+          <button onClick={handleEditProfile} className='bg-[#439A86] p-3 sm:p-2 rounded-lg text-lg w-40 text-white hover:bg-white border hover:border hover:border-[#439A86] hover:text-[#222E50] ease-in-out duration-200'>Edit Profile</button>
+          <Link to={"/create-listing"} className='bg-transparent text-center p-3 sm:p-2 rounded-lg text-lg text-[#222E50] w-40 border border-[#439A86] hover:bg-[#439A86] hover:text-white ease-in-out duration-200'>Create Listing</Link>
         </div>
 
         <div className='flex gap-5 sm:gap-10 p-2 sm:p-8 mt-5 sm:mt-0 mx-auto font-mono'>
