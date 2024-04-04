@@ -31,6 +31,8 @@ function Profile() {
     }
   );
   const fileInputRef = useRef(null);
+  const [showListingsError, setshowListingsError] = useState(false)
+  const [listings, setListings] = useState([])
 
   useEffect(() => {
     dispatch(updateUserFailure(null)); 
@@ -200,6 +202,30 @@ function Profile() {
     })
   }
 
+  const handleShowListings = () => {
+    setshowListingsError(false)
+    setListings([])
+
+    const userId = currentUser.user._id
+
+    fetch(`/api/v1/user/listings/${userId}`)
+    .then((resp) => {
+      return resp.json()
+    })
+    .then((data) => {
+      if(data.success == false){
+        setshowListingsError(true)
+        return 
+      }
+
+      setListings(data)
+      console.log(data)
+    })
+    .catch((error) => {
+      setshowListingsError(true)
+    })
+  }
+
 
   return (
     <>
@@ -278,9 +304,46 @@ function Profile() {
           </div>      
 
           <div className=''>
-            <p className='text-xl text-green-700 cursor-pointer hover:text-green-500'>Show Listings</p>
+            <p onClick={handleShowListings} className='text-xl text-green-700 cursor-pointer hover:text-green-500'>Show Listings</p>
           </div>
+          
         </div>
+
+        {
+          showListingsError &&
+          <p className='text-red-600 text-center mt-2 mb-2'>Error showing Listings</p>
+        }
+
+        {
+          listings && listings.length > 0 &&
+          <div className='flex flex-col gap-4'> 
+            <h1 className='text-center mt-7 text-2xl font-semibold'>
+              Your Listings
+            </h1>
+
+            {
+              listings.map((item) => (
+                <div key={item._id} className='flex items-center justify-between gap-4 shadow-sm border border-slate-300 rounded-lg p-3 mx-4'>
+                  <Link to={`/listing/${item._id}`}>
+                    <img src={item.imageUrls[0]} alt="cover image" className='h-16 w-16 object-contain'/>
+                  </Link>
+
+                  <Link to={`/listing/${item._id}`} className='flex-1 text-slate-700 font-semibold hover:underline truncate'>
+                    <p>{item.title}</p>
+                  </Link>
+
+                  <div className='flex flex-col items-center'>
+                    <button className='text-red-600'>Delete</button>
+                    <button className='text-green-600'>Edit</button>
+                  </div>
+                </div>
+              )) 
+            } 
+          </div>
+                      
+          
+        }
+
       </div>
     </>
   )

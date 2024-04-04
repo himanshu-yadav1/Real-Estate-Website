@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import errorHandler from "../utils/ErrorHandler.js"
+import { Listing } from "../models/listing.model.js"
 
 const updateUser = async(req, res, next) => {
     try {
@@ -78,7 +79,30 @@ const deleteUser = async(req, res, next) => {
     }
 }
 
+const getListings = async(req, res, next) => {
+    const userId = req.params.id
+
+    if(userId === req.user.id){
+        try {
+            const listings = await Listing.find({user : userId})
+
+            res
+            .status(200)
+            .json(listings)
+            
+        } catch (error) {
+            next(error)
+        }
+
+    }
+    else{
+        return next(errorHandler(404, "You are not authenticated to get the listings"))
+    }
+
+}
+
 export {
     updateUser,
-    deleteUser
+    deleteUser,
+    getListings
 } 
