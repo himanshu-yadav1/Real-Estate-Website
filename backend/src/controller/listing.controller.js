@@ -37,7 +37,54 @@ const deleteListing = async(req, res, next) => {
 
 }
 
+const updateListing = async(req, res, next) => {
+    const listingId = req.params.id
+
+    try {
+        const listing = await Listing.findById(listingId)
+
+        if(!listing){
+            return next(errorHandler(404, "Listing not found"))
+        }
+
+        if(listing.user != req.user.id){
+            return next(errorHandler(402, "You can update your own listings"))
+        }
+
+        const updatedListing = await Listing.findByIdAndUpdate(listingId, req.body, { new: true })
+
+        res
+        .status(200)
+        .json({updatedListing, message: "Listing updated"})
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getListing = async(req, res, next) => {
+    const listingId = req.params.id
+
+    try {
+        const listing = await Listing.findById(listingId)
+
+        if(!listing){
+            return next(errorHandler(404, "Listing not found"))
+        }
+
+        res
+        .status(200)
+        .json(listing)
+
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 export {
     createListing,
-    deleteListing
+    deleteListing,
+    updateListing,
+    getListing
 }
