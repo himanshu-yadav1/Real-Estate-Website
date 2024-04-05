@@ -33,6 +33,7 @@ function Profile() {
   const fileInputRef = useRef(null);
   const [showListingsError, setshowListingsError] = useState(false)
   const [listings, setListings] = useState([])
+  const [deleteListingMessage, setDeleteListingMessage] = useState(false)
 
   useEffect(() => {
     dispatch(updateUserFailure(null)); 
@@ -219,10 +220,36 @@ function Profile() {
       }
 
       setListings(data)
-      console.log(data)
     })
     .catch((error) => {
       setshowListingsError(true)
+    })
+  }
+
+  const handleDeleteListing = (listingId) => {
+
+    fetch(`/api/v1/listing/delete/${listingId}`, {
+      method: "DELETE"
+    })
+    .then((resp) => {
+      return resp.json()
+    })
+    .then((data) => {
+      if(data.success == false){
+        console.log(data.message)
+        return
+      }
+
+      setDeleteListingMessage(data.message)
+      setListings((prev) => prev.filter((item) => item._id != listingId) )
+
+      setTimeout(() => {
+        setDeleteListingMessage(false)
+      }, 2000)
+
+    })
+    .catch((error) => {
+      console.log(error)
     })
   }
 
@@ -315,6 +342,11 @@ function Profile() {
         }
 
         {
+          deleteListingMessage &&
+          <p className='text-slate-700 text-center mt-2 mb-2'>{deleteListingMessage}</p>
+        }
+
+        {
           listings && listings.length > 0 &&
           <div className='flex flex-col gap-4'> 
             <h1 className='text-center mt-7 text-2xl font-semibold'>
@@ -333,7 +365,7 @@ function Profile() {
                   </Link>
 
                   <div className='flex flex-col items-center'>
-                    <button className='text-red-600'>Delete</button>
+                    <button onClick={() => handleDeleteListing(item._id)} className='text-red-600'>Delete</button>
                     <button className='text-green-600'>Edit</button>
                   </div>
                 </div>
