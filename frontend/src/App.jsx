@@ -8,7 +8,8 @@ import Header from "./components/Header"
 import HeaderAuth from "./components/HeaderAuth"
 import PrivateRoute from "./components/PrivateRoute"
 import CreateListing from "./components/CreateListing"
-import UpdateListing from "./components/UpdateListing"
+import UpdateListing from "./components/updateListing"
+import Listing from "./components/Listing"
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function AppContent() {
         <Route path="/sign-in" element={<Signin />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
+        <Route path="/listing/:listingId" element={<Listing/>} />
         <Route element={<PrivateRoute />} >
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing/>}/>
