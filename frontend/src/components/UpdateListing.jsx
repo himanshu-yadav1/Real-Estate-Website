@@ -259,7 +259,9 @@ function UpdateListing() {
                         <input type='number' onChange={handleChangeInFormData} value={formData.regularPrice} id='regularPrice' min='5000' max='100000000' required className='p-3 border border-gray-300 rounded-lg' />
                         <div className='flex flex-col items-center'>
                         <p>Regular price</p>
-                        <span className='text-xs'>(₹ / month)</span>
+                        {formData.type === 'rent' && (
+                            <span className='text-xs'>($ / month)</span>
+                        )}
                         </div>
                     </div>
 
@@ -269,7 +271,9 @@ function UpdateListing() {
                             <input type='number' onChange={handleChangeInFormData} value={formData.discountedPrice} id='discountedPrice' min='0' max='100000000' required className='p-3 border border-gray-300 rounded-lg' />
                             <div className='flex flex-col items-center'>
                             <p>Discounted price</p>
-                            <span className='text-xs'>(₹ / month)</span>
+                            {formData.type === 'rent' && (
+                                <span className='text-xs'>($ / month)</span>
+                            )}
                             </div>
                         </div>
                     }
