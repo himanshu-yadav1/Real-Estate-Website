@@ -1,10 +1,33 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaSearch } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react';
 
 function Header() {
 
     const {currentUser} = useSelector(state => state.user)
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set('searchTerm', searchTerm);
+      const searchQuery = urlParams.toString();
+      navigate(`/search?${searchQuery}`);
+    };
+  
+    useEffect(() => {
+      const urlParams = new URLSearchParams(location.search);
+      const searchTermFromUrl = urlParams.get('searchTerm');
+      if (searchTermFromUrl) {
+        setSearchTerm(searchTermFromUrl);
+      }
+
+    }, [location.search]);
+    
 
     return (
         <header className='bg-[#439A86] shadow-md'>
@@ -12,10 +35,12 @@ function Header() {
                 <Link to='/'>
                     <h1 className='text-[#222E50] font-bold text-2xl sm:text-3xl'>RealEstate</h1>
                 </Link>
-                <div className="bg-[#BCD8C1] p-2 rounded-lg flex items-center">
-                    <input type="text" placeholder='search' className='text-[#222E50] w-32 sm:w-64 bg-transparent focus:outline-none'/>
-                    <FaSearch className='text-[#222E50]'/>
-                </div>
+                <form onSubmit={handleSubmit} className="bg-[#BCD8C1] p-2 rounded-lg flex items-center">
+                    <input type="text" placeholder='search' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className='text-[#222E50] w-32 sm:w-64 bg-transparent focus:outline-none'/>
+                    <button>
+                        <FaSearch className='text-[#222E50]'/>
+                    </button>
+                </form>
 
                 <ul className='flex gap-4'>
                     <Link to='/'>
