@@ -8,7 +8,7 @@ import Header from "./components/Header"
 import HeaderAuth from "./components/HeaderAuth"
 import PrivateRoute from "./components/PrivateRoute"
 import CreateListing from "./components/CreateListing"
-import UpdateListing from "./components/updateListing"
+import UpdateListing from "./components/UpdateListing"
 import Listing from "./components/Listing"
 import Search from "./components/Search"
 
