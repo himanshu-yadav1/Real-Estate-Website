@@ -18,7 +18,7 @@ function Home() {
   useEffect(() => {
 
     const fetchOfferListings = async () => {
-      fetch('/api/v1/listing/get?offer=true&limit=4')
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?offer=true&limit=4`)
       .then((resp) => {
         return resp.json()
       })
@@ -32,7 +32,7 @@ function Home() {
     }
 
     const fetchRentListings = async () => {
-      fetch('/api/v1/listing/get?type=rent&limit=4')
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=rent&limit=4`)
       .then((resp) => {
         return resp.json()
       })
@@ -46,7 +46,7 @@ function Home() {
     }    
 
     const fetchSaleListings = async () => {
-      fetch('/api/v1/listing/get?type=sale&limit=4')
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=sale&limit=4`)
       .then((resp) => {
         return resp.json()
       })

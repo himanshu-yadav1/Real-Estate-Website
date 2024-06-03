@@ -20,7 +20,7 @@ function SignUp() {
       return 
     }
   
-    fetch('/api/v1/auth/signup', {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signup`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(

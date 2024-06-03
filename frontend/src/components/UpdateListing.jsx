@@ -35,7 +35,7 @@ function UpdateListing() {
         const fetchListing = async () => {
             const listingId = params.listingId
 
-            fetch(`/api/v1/listing/get/${listingId}`)
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get/${listingId}`)
             .then((resp) => {
                 return resp.json()
             })
@@ -162,7 +162,7 @@ function UpdateListing() {
 
         const listingId = params.listingId
 
-        fetch(`/api/v1/listing/update/${listingId}`, {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/update/${listingId}`, {
             method: 'POST',
             headers: { 'Content-type': 'application/json'},
             body: JSON.stringify( 

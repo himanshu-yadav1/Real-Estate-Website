@@ -135,7 +135,7 @@ function CreateListing() {
             return setError("Discounted Price must be lower than Regular Price")
         }
 
-        fetch('/api/v1/listing/create', {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/create`, {
             method: 'POST',
             headers: { 'Content-type': 'application/json'},
             body: JSON.stringify( 

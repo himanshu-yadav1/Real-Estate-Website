@@ -27,7 +27,7 @@ function Listing() {
 
             const listingId = params.listingId
 
-            fetch(`/api/v1/listing/get/${listingId}`)
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get/${listingId}`)
             .then((resp) => {
                 return resp.json()
             })

@@ -60,7 +60,7 @@ function Profile() {
 
     const userId = currentUser.user._id
 
-    fetch(`/api/v1/user/update/${userId}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/update/${userId}`, {
       method: "POST",
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify( formData )
@@ -161,7 +161,7 @@ function Profile() {
 
       const userId = currentUser.user._id
 
-      fetch(`/api/v1/user/delete/${userId}`, {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/delete/${userId}`, {
         method: "DELETE"
       })
       .then((resp) => {
@@ -186,7 +186,7 @@ function Profile() {
   }
 
   const handleSignOut = () => {
-    fetch('/api/v1/auth/signout')
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signout`)
     .then((resp) => {
       return resp.json()
     })
@@ -209,7 +209,7 @@ function Profile() {
 
     const userId = currentUser.user._id
 
-    fetch(`/api/v1/user/listings/${userId}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/listings/${userId}`)
     .then((resp) => {
       return resp.json()
     })
@@ -228,7 +228,7 @@ function Profile() {
 
   const handleDeleteListing = (listingId) => {
 
-    fetch(`/api/v1/listing/delete/${listingId}`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/delete/${listingId}`, {
       method: "DELETE"
     })
     .then((resp) => {

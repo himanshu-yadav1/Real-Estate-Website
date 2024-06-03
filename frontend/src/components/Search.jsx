@@ -49,7 +49,7 @@ function Search() {
 
             const searchQuery = urlParams.toString()
 
-            fetch(`/api/v1/listing/get?${searchQuery}`)
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`)
             .then((resp) => {
                 return resp.json()
             })
@@ -127,7 +127,7 @@ function Search() {
 
         const searchQuery = urlParams.toString()
 
-        fetch(`/api/v1/listing/get?${searchQuery}`)
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`)
         .then((resp) => {
             return resp.json()
         })
