@@ -12,7 +12,10 @@ const app = express()
 const port = process.env.PORT
 
 
-app.use(cors())
+app.use(cors({
+    origin: 'https://real-estate-frontend-alpha.vercel.app', // Replace with your frontend's URL
+    credentials: true // Allow credentials (cookies, authorization headers, etc.) to be sent in requests
+}));
 app.use(express.json())
 app.use(cookieParser())
 app.use('/api/v1/user', userRouter)
