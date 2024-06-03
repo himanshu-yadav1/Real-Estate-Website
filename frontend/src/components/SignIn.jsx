@@ -30,6 +30,7 @@ function SignIn() {
   
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signin`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(
         {

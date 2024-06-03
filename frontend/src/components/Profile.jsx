@@ -209,7 +209,10 @@ function Profile() {
 
     const userId = currentUser.user._id
 
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/listings/${userId}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/listings/${userId}`, {
+      method: 'GET',
+      credentials: 'include' // Ensures cookies are sent with the request
+    })
     .then((resp) => {
       return resp.json()
     })
