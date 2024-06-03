@@ -35,7 +35,10 @@ function UpdateListing() {
         const fetchListing = async () => {
             const listingId = params.listingId
 
-            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get/${listingId}`)
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get/${listingId}`, {
+                method: "GET",
+                credentials: 'include' // Ensures cookies are sent with the request
+            })
             .then((resp) => {
                 return resp.json()
             })
@@ -164,6 +167,7 @@ function UpdateListing() {
 
         fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/update/${listingId}`, {
             method: 'POST',
+            credentials: 'include', // Ensures cookies are sent with the request
             headers: { 'Content-type': 'application/json'},
             body: JSON.stringify( 
                 {

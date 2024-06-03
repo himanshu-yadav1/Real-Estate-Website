@@ -18,7 +18,10 @@ function Home() {
   useEffect(() => {
 
     const fetchOfferListings = async () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?offer=true&limit=4`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?offer=true&limit=4`, {
+        method: "GET",
+        credentials: 'include' // Ensures cookies are sent with the request
+      })
       .then((resp) => {
         return resp.json()
       })
@@ -32,7 +35,10 @@ function Home() {
     }
 
     const fetchRentListings = async () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=rent&limit=4`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=rent&limit=4`, {
+        method: "GET",
+        credentials: 'include' // Ensures cookies are sent with the request
+      })
       .then((resp) => {
         return resp.json()
       })
@@ -46,7 +52,10 @@ function Home() {
     }    
 
     const fetchSaleListings = async () => {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=sale&limit=4`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=sale&limit=4`, {
+        method: "GET",
+        credentials: 'include' // Ensures cookies are sent with the request
+      })
       .then((resp) => {
         return resp.json()
       })

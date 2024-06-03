@@ -21,6 +21,7 @@ function OAuth() {
             
             fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google`, {
                 method: 'POST',
+                credentials: 'include', // Ensures cookies are sent with the request
                 headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(
                     {

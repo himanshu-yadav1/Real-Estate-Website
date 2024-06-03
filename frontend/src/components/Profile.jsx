@@ -62,6 +62,7 @@ function Profile() {
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/update/${userId}`, {
       method: "POST",
+      credentials: 'include', // Ensures cookies are sent with the request
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify( formData )
     })
@@ -162,7 +163,8 @@ function Profile() {
       const userId = currentUser.user._id
 
       fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/delete/${userId}`, {
-        method: "DELETE"
+        method: "DELETE",
+        credentials: 'include' // Ensures cookies are sent with the request
       })
       .then((resp) => {
         return resp.json()
@@ -186,7 +188,10 @@ function Profile() {
   }
 
   const handleSignOut = () => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signout`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/signout`, {
+      method: "GET",
+      credentials: 'include' // Ensures cookies are sent with the request
+    })
     .then((resp) => {
       return resp.json()
     })
@@ -232,7 +237,8 @@ function Profile() {
   const handleDeleteListing = (listingId) => {
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/delete/${listingId}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials: 'include' // Ensures cookies are sent with the request
     })
     .then((resp) => {
       return resp.json()

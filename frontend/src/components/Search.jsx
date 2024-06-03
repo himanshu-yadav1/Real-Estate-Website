@@ -49,7 +49,10 @@ function Search() {
 
             const searchQuery = urlParams.toString()
 
-            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`)
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`, {
+                method: "GET",
+                credentials: 'include' // Ensures cookies are sent with the request
+            })
             .then((resp) => {
                 return resp.json()
             })
@@ -127,7 +130,10 @@ function Search() {
 
         const searchQuery = urlParams.toString()
 
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`)
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?${searchQuery}`, {
+            method: "GET",
+            credentials: 'include' // Ensures cookies are sent with the request
+        })
         .then((resp) => {
             return resp.json()
         })
