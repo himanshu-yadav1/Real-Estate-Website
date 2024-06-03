@@ -73,7 +73,11 @@ const signIn = async(req, res, next) => {
 
         return res
         .status(200)
-        .cookie('access_token', token, { httpOnly: true})
+        .cookie('access_token', token, { 
+            httpOnly: true,
+            secure: true, // Ensures the cookie is sent over HTTPS
+            sameSite: 'None' // Allows cross-site cookie
+        })
         .json({user, statusCode: 200, message: "Login Successfull"})
 
     } catch (error) {
