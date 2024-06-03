@@ -7,12 +7,10 @@ import dotenv from 'dotenv'
 dotenv.config()
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import path from 'path';
 
 const app = express()
 const port = process.env.PORT
 
-const __dirname = path.resolve();
 
 app.use(cors())
 app.use(express.json())
@@ -21,11 +19,6 @@ app.use('/api/v1/user', userRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/listing', listingRouter)
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
-})
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500
