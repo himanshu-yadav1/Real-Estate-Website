@@ -6,7 +6,7 @@ function ListingItem({ listing }) {
         <div className='bg-white flex flex-grow shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full max-w-[330px] sm:w-[250px] '>
             <Link to={`/listing/${listing._id}`}>
                 <img
-                    src={listing.imageUrls[0] || 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Sales_Blog/real-estate-business-compressor.jpg?width=595&height=400&name=real-estate-business-compressor.jpg' }
+                    src={listing.imageUrls[0] || 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Sales_Blog/real-estate-business-compressor.jpg?width=595&height=400&name=real-estate-business-compressor.jpg'}
                     alt='listing cover'
                     className='h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300'
                 />
@@ -42,6 +42,10 @@ function ListingItem({ listing }) {
                             {listing.bathrooms > 1 ? `${listing.bathrooms} baths ` : `${listing.bathrooms} bath `}
                         </div>
                     </div>
+                </div>
+
+                <div className='flex justify-center w-full bg-[#d7dbf0] pt-2 pb-3 hover:scale-110'>
+                    <Link to={`/listing/${listing._id}`} className='text-[#334155] font-bold text-xs'>View Property</Link>
                 </div>
             </Link>
         </div>

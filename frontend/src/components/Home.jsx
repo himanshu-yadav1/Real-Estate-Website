@@ -125,7 +125,7 @@ function Home() {
             <Link to={'/search?offer=true'} className='text-sm text-blue-800 hover:underline'>Show more offers</Link>
           </div>
 
-          <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-wrap gap-4 justify-center'>
             {!offerListingsLoading && offerListings.map((listing) => (
               <ListingItem listing={listing} key={listing._id} />
             ))}

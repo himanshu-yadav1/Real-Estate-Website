@@ -23,6 +23,8 @@ function ListingItemLoading() {
                         <div className='bg-neutral-400/50 w-2/6 h-[17px] animate-pulse rounded-md'></div>
                     </div>
                 </div>
+
+                <div className='bg-neutral-400/50 w-full h-[38px] animate-pulse rounded-b-md'></div>
             </div>
         </div>
     )
