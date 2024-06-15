@@ -5,6 +5,7 @@ import { Navigation } from 'swiper/modules'
 import SwiperCore from 'swiper'
 import 'swiper/css/bundle'
 import ListingItem from './ListingItem'
+import ListingItemLoading from './ListingItemLoading'
 
 function Home() {
 
