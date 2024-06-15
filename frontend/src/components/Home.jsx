@@ -9,8 +9,14 @@ import ListingItem from './ListingItem'
 function Home() {
 
   const [offerListings, setOfferListings] = useState([])
-  const [saleListings, setSaleListings] = useState([])
   const [rentListings, setRentListings] = useState([])
+  const [saleListings, setSaleListings] = useState([])
+
+
+  const [offerListingsLoading, setOfferListingsLoading] = useState(true)
+  const [rentListingsLoading, setRentListingsLoading] = useState(true)
+  const [saleListingsLoading, setSaleListingsLoading] = useState(true)
+
 
   SwiperCore.use([Navigation])
 
@@ -22,16 +28,17 @@ function Home() {
         method: "GET",
         credentials: 'include' // Ensures cookies are sent with the request
       })
-      .then((resp) => {
-        return resp.json()
-      })
-      .then((data) => {
-        setOfferListings(data)
-        fetchRentListings()
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .then((resp) => {
+          return resp.json()
+        })
+        .then((data) => {
+          setOfferListings(data)
+          setOfferListingsLoading(false)
+          fetchRentListings()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
 
     const fetchRentListings = async () => {
@@ -39,32 +46,34 @@ function Home() {
         method: "GET",
         credentials: 'include' // Ensures cookies are sent with the request
       })
-      .then((resp) => {
-        return resp.json()
-      })
-      .then((data) => {
-        setRentListings(data)
-        fetchSaleListings()
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }    
+        .then((resp) => {
+          return resp.json()
+        })
+        .then((data) => {
+          setRentListings(data)
+          setRentListingsLoading(false)
+          fetchSaleListings()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
 
     const fetchSaleListings = async () => {
       fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/listing/get?type=sale&limit=4`, {
         method: "GET",
         credentials: 'include' // Ensures cookies are sent with the request
       })
-      .then((resp) => {
-        return resp.json()
-      })
-      .then((data) => {
-        setSaleListings(data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .then((resp) => {
+          return resp.json()
+        })
+        .then((data) => {
+          setSaleListings(data)
+          setSaleListingsLoading(false)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
 
 
@@ -109,61 +118,78 @@ function Home() {
 
 
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
-        {offerListings && offerListings.length > 0 && 
-          (
-            <div className=''>
-              <div className='my-3'>
-                <h2 className='text-2xl font-semibold text-slate-600'>Recent offers</h2>
-                <Link to={'/search?offer=true'} className='text-sm text-blue-800 hover:underline'>Show more offers</Link>
-              </div>
+        <div className=''>
+          <div className='my-3'>
+            <h2 className='text-2xl font-semibold text-slate-600'>Recent offers</h2>
+            <Link to={'/search?offer=true'} className='text-sm text-blue-800 hover:underline'>Show more offers</Link>
+          </div>
 
-              <div className='flex flex-wrap gap-4'>
-                {offerListings.map((listing) => (
-                  <ListingItem listing={listing} key={listing._id} />
-                ))}
-              </div>
-            </div>
-          )
-        }
+          <div className='flex flex-wrap gap-4'>
+            {!offerListingsLoading && offerListings.map((listing) => (
+              <ListingItem listing={listing} key={listing._id} />
+            ))}
 
-        {rentListings && rentListings.length > 0 && 
-          (
-            <div className=''>
-              <div className='my-3'>
-                <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
-                <Link to={'/search?type=rent'} className='text-sm text-blue-800 hover:underline'>Show more places for rent</Link>
-              </div>
+            {offerListingsLoading &&
+              <>
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+              </>
+            }
+          </div>
+        </div>
 
-              <div className='flex flex-wrap gap-4'>
-                {rentListings.map((listing) => (
-                  <ListingItem listing={listing} key={listing._id} />
-                ))}
-              </div>
-            </div>
-          )
-        }
 
-        {saleListings && saleListings.length > 0 && 
-          (
-            <div className=''>
-              <div className='my-3'>
-                <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
-                <Link to={'/search?type=sale'} className='text-sm text-blue-800 hover:underline'>Show more places for sale</Link>
-              </div>
+        <div className=''>
+          <div className='my-3'>
+            <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
+            <Link to={'/search?type=rent'} className='text-sm text-blue-800 hover:underline'>Show more places for rent</Link>
+          </div>
 
-              <div className='flex flex-wrap gap-4'>
-                {saleListings.map((listing) => (
-                  <ListingItem listing={listing} key={listing._id} />
-                ))}
-              </div>
-            </div>
-          )
-        }
+          <div className='flex flex-wrap gap-4'>
+            {!rentListingsLoading && rentListings.map((listing) => (
+              <ListingItem listing={listing} key={listing._id} />
+            ))}
+
+            {rentListingsLoading &&
+              <>
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+              </>
+            }
+          </div>
+        </div>
+
+
+        <div className=''>
+          <div className='my-3'>
+            <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
+            <Link to={'/search?type=sale'} className='text-sm text-blue-800 hover:underline'>Show more places for sale</Link>
+          </div>
+
+          <div className='flex flex-wrap gap-4'>
+            {!saleListingsLoading && saleListings.map((listing) => (
+              <ListingItem listing={listing} key={listing._id} />
+            ))}
+
+            {saleListingsLoading &&
+              <>
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+                <ListingItemLoading />
+              </>
+            }
+          </div>
+        </div>
       </div>
-      
+
     </div>
   )
-  
+
 }
 
 export default Home
