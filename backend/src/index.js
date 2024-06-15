@@ -11,9 +11,20 @@ import cookieParser from 'cookie-parser'
 const app = express()
 const port = process.env.PORT
 
+const allowedOrigins = [
+    'https://real-estate-frontend-alpha.vercel.app',
+    'http://localhost:5173'
+];
+
 
 app.use(cors({
-    origin: 'https://real-estate-frontend-alpha.vercel.app', // frontend URL
+    origin: (origin, callback) => {                         // frontend URLs
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true // Allow credentials (cookies, authorization headers, etc.) to be sent in requests
 }));
 app.use(express.json())
