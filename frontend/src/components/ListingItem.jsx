@@ -4,7 +4,7 @@ import { MdLocationOn } from 'react-icons/md';
 function ListingItem({ listing }) {
     return (
         <div className='bg-white flex flex-grow shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full max-w-[330px] sm:w-[250px] '>
-            <Link to={`/listing/${listing._id}`}>
+            <div>
                 <img
                     src={listing.imageUrls[0] || 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Sales_Blog/real-estate-business-compressor.jpg?width=595&height=400&name=real-estate-business-compressor.jpg'}
                     alt='listing cover'
@@ -44,10 +44,10 @@ function ListingItem({ listing }) {
                     </div>
                 </div>
 
-                <div className='flex justify-center w-full bg-[#d7dbf0] pt-2 pb-3 hover:scale-110'>
-                    <Link to={`/listing/${listing._id}`} className='text-[#334155] font-bold text-xs'>View Property</Link>
-                </div>
-            </Link>
+                <Link to={`/listing/${listing._id}`} className='flex justify-center w-full bg-[#d7dbf0] pt-2 pb-3 hover:scale-110'>
+                    <span  className='text-[#334155] font-bold text-xs'>View Property</span>
+                </Link>
+            </div>
         </div>
     )
 }

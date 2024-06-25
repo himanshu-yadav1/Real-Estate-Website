@@ -21,6 +21,25 @@ function Home() {
 
   SwiperCore.use([Navigation])
 
+  const swiperImages = [
+    {
+      id: 1,
+      url: '/images/SwiperImage1.jpg'
+    },
+    {
+      id: 2,
+      url: '/images/SwiperImage2.jpg'
+    },
+    {
+      id: 3,
+      url: '/images/SwiperImage3.jpg'
+    },
+    {
+      id: 4,
+      url: '/images/SwiperImage4.jpg'
+    },
+  ]
+
 
   useEffect(() => {
 
@@ -107,10 +126,10 @@ function Home() {
 
 
       <Swiper navigation>
-        {offerListings && offerListings.length > 0 &&
-          offerListings.map((listing) => (
-            <SwiperSlide key={listing._id}>
-              <div style={{ background: `url(${listing.imageUrls[0]}) center no-repeat`, backgroundSize: 'cover', }} className='h-[500px]' >
+        {swiperImages &&
+          swiperImages.map((image) => (
+            <SwiperSlide key={image.id}>
+              <div style={{ background: `url(${image.url}) center no-repeat`, backgroundSize: 'cover', }} className='h-[500px]' >
               </div>
             </SwiperSlide>
           ))
@@ -121,11 +140,11 @@ function Home() {
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         <div className=''>
           <div className='my-3'>
-            <h2 className='text-2xl font-semibold text-slate-600'>Recent offers</h2>
+            <h2 className='text-2xl font-semibold text-slate-700'>Recent offers</h2>
             <Link to={'/search?offer=true'} className='text-sm text-blue-800 hover:underline'>Show more offers</Link>
           </div>
 
-          <div className='flex flex-wrap gap-4 justify-center'>
+          <div className='flex flex-wrap gap-4 justify-center sm:justify-start'>
             {!offerListingsLoading && offerListings.map((listing) => (
               <ListingItem listing={listing} key={listing._id} />
             ))}
@@ -144,11 +163,11 @@ function Home() {
 
         <div className=''>
           <div className='my-3'>
-            <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
+            <h2 className='text-2xl font-semibold text-slate-700'>Recent places for rent</h2>
             <Link to={'/search?type=rent'} className='text-sm text-blue-800 hover:underline'>Show more places for rent</Link>
           </div>
 
-          <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-wrap gap-4 justify-center sm:justify-start'>
             {!rentListingsLoading && rentListings.map((listing) => (
               <ListingItem listing={listing} key={listing._id} />
             ))}
@@ -167,11 +186,11 @@ function Home() {
 
         <div className=''>
           <div className='my-3'>
-            <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
+            <h2 className='text-2xl font-semibold text-slate-700'>Recent places for sale</h2>
             <Link to={'/search?type=sale'} className='text-sm text-blue-800 hover:underline'>Show more places for sale</Link>
           </div>
 
-          <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-wrap gap-4 justify-center sm:justify-start'>
             {!saleListingsLoading && saleListings.map((listing) => (
               <ListingItem listing={listing} key={listing._id} />
             ))}
