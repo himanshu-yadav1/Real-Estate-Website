@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListingItem from './ListingItem';
+import ListingItemLoading from './ListingItemLoading';
 
 function Search() {
     const navigate = useNavigate();
@@ -225,11 +226,12 @@ function Search() {
                     }
 
                     {loading && 
-                        (
-                            <p className='text-xl text-slate-700 text-center w-full'>
-                                Loading...
-                            </p>
-                        )
+                        <>
+                            <ListingItemLoading /> 
+                            <ListingItemLoading /> 
+                            <ListingItemLoading /> 
+                            <ListingItemLoading /> 
+                        </>
                     }
 
                     {!loading && listings &&
